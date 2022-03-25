@@ -34,11 +34,11 @@ def index():
             }
         }
 
-@app.get('/datas/')
+@app.get('/data/')
 def get_all(target_date: date = None):
     """
     全件取得
-    /datas/
+    /data/
     """
     # コレクションオブジェクトを取得
     collection = get_collection()
@@ -50,11 +50,11 @@ def get_all(target_date: date = None):
     return dumps(result)
 
 
-@app.get('/datas/{target_date}')
+@app.get('/data/{target_date}')
 def get_by_date(target_date: date = None):
     """
     貯金日付による絞り込み検索
-    /datas/{yyyy-mm-dd}
+    /data/{yyyy-mm-dd}
     """
     # コレクションオブジェクトを取得
     collection = get_collection()
@@ -66,11 +66,11 @@ def get_by_date(target_date: date = None):
     return dumps(result)
 
 
-@app.get('/datas/{date_from}/{date_to}')
+@app.get('/data/{date_from}/{date_to}')
 def get_between_date(date_from: date, date_to: date):
     """
     貯金日付に範囲検索
-    /datas/{yyyy-mm-dd}/{yyyy-mm-dd}
+    /data/{yyyy-mm-dd}/{yyyy-mm-dd}
     """
     # コレクションオブジェクトを取得
     collection = get_collection()
