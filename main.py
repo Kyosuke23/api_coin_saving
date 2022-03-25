@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from pymongo import MongoClient
 from bson.json_util import dumps
 from datetime import date, datetime
+from pymongo import DESCENDING
 
 app = FastAPI()
 CONNECTION_URL = 'mongodb://cluster0_user:cluster0_pass@cluster0-shard-00-00.bxkz1.mongodb.net:27017,cluster0-shard-00-01.bxkz1.mongodb.net:27017,cluster0-shard-00-02.bxkz1.mongodb.net:27017/myFirstDatabase?ssl=true&replicaSet=atlas-qn0lud-shard-0&authSource=admin&retryWrites=true&w=majority'
@@ -76,10 +77,13 @@ def get_between_date(date_from: date, date_to: date):
     collection = get_collection()
 
     # 日付による範囲検索を実行
-    result = collection.find(filter={'$and':[
-        {'SAVING_DATE':{'$gte':str(date_from)}},
-        {'SAVING_DATE':{'$lte':str(date_to)}}
-    ]})
+    result = collection.find(
+        filter={'$and':[
+            {'SAVING_DATE':{'$gte':str(date_from)}},
+            {'SAVING_DATE':{'$lte':str(date_to)}}
+        ]},
+        sort=[('SAVING_DATE',DESCENDING)],
+    )
 
     # 結果を返却
     return dumps(result)
