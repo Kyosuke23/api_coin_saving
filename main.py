@@ -73,7 +73,7 @@ async def update(target_date: date = None, amount: int = 0):
     /update/{target_date}/{amount}
     """
     # パラメータチェック
-    if(target_date is None) or (amount == 0):
+    if(target_date is None):
         return {'parameter error'}
     
     # コレクションオブジェクトを取得
