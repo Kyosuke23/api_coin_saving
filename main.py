@@ -84,7 +84,6 @@ def get_between_date(date_from: date, date_to: date):
     # 結果を返却
     return dumps(result)
 
-
 @app.post('/update/{target_date}/{amount}')
 async def update(target_date: date = None, amount: int = 0):
     """
@@ -94,7 +93,7 @@ async def update(target_date: date = None, amount: int = 0):
     # パラメータチェック
     if(target_date is None):
         return {'parameter error'}
-    
+
     # コレクションオブジェクトを取得
     collection = get_collection()
 
@@ -118,11 +117,10 @@ async def update(target_date: date = None, amount: int = 0):
 
     # 返却値を作成
     result = {
-        'input_date' : target_date,   # 更新されたレコードの貯金日付
-        'input_amount' : amount,      # 加算された枚数
+        'input_date' : target_date, # 更新されたレコードの貯金日付
+        'input_amount' : amount, # 加算された枚数
         'updated_data' : updated_data # 更新後のレコード
     }
 
     # 更新されたレコードを返却
-    return result
-
+    return dumps(result, default=str)
