@@ -34,7 +34,7 @@ def index():
             }
         }
 
-@app.get("/datas/")
+@app.get('/datas/')
 def get_all(target_date: date = None):
     """
     全件取得
@@ -50,10 +50,10 @@ def get_all(target_date: date = None):
     return dumps(result)
 
 
-@app.get("/datas/{target_date}")
+@app.get('/datas/{target_date}')
 def get_by_date(target_date: date = None):
     """
-    貯金日付による絞り込み検策
+    貯金日付による絞り込み検索
     /datas/{yyyy-mm-dd}
     """
     # コレクションオブジェクトを取得
@@ -66,7 +66,26 @@ def get_by_date(target_date: date = None):
     return dumps(result)
 
 
-@app.post("/update/{target_date}/{amount}")
+@app.get('/datas/{date_from}/{date_to}')
+def get_between_date(date_from: date, date_to: date):
+    """
+    貯金日付に範囲検索
+    /datas/{yyyy-mm-dd}/{yyyy-mm-dd}
+    """
+    # コレクションオブジェクトを取得
+    collection = get_collection()
+
+    # 日付による範囲検索を実行
+    result = collection.find(filter={'$and':[
+        {'SAVING_DATE':{'$gte':str(date_from)}},
+        {'SAVING_DATE':{'$lte':str(date_to)}}
+    ]})
+
+    # 結果を返却
+    return dumps(result)
+
+
+@app.post('/update/{target_date}/{amount}')
 async def update(target_date: date = None, amount: int = 0):
     """
     500円玉貯金ログ情報を更新する
