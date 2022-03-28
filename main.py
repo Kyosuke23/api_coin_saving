@@ -35,6 +35,7 @@ def index():
             }
         }
 
+
 @app.get('/data/')
 def get_all(target_date: date = None):
     """
@@ -101,6 +102,7 @@ async def update(target_date: date = None, amount: int = 0):
     # コレクションオブジェクトを取得
     collection = get_collection()
 
+    ##### 今日のデータを更新　#####
     # 更新条件
     filter = {'SAVING_DATE': str(target_date)}
 
@@ -114,10 +116,27 @@ async def update(target_date: date = None, amount: int = 0):
         }
 
     # 更新実行
-    collection.update_one(filter, update_value, upsert=False)
+    update = collection.update_one(filter, update_value, upsert=False)
+    print('更新件数(当日)：' + str(update.matched_count) + ' :target_date: ' + str(target_date)) 
 
     # 更新後のデータを取得
     updated_data = collection.find_one(filter={'SAVING_DATE': str(target_date)})
+
+    ##### 明日以降の累計枚数を更新　#####
+    # 更新条件
+    filter = {'SAVING_DATE': {'$gt': str(target_date)}}
+
+    # 更新値
+    update_value = {
+            '$inc':{
+                'TOTAL_AMOUNT': amount # 累計貯金枚数 +1
+                },
+            '$set':{'UPDATED_AT': datetime.now()} # 更新日付
+        }
+
+    # 更新実行
+    update = collection.update_many(filter, update_value, upsert=False)
+    print('更新件数(明日以降)：' + str(update.matched_count) + ' :target_date: ' + str(target_date)) 
 
     # 返却値を作成
     result = {
